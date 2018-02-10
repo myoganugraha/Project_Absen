@@ -3,12 +3,15 @@ package itk.myoganugraha.absen;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.net.NetworkInterface;
 import java.util.Collections;
@@ -19,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Context mContext;
     Button registerNow, toLogin;
     EditText firstName, lastName, email, password, phone;
-    TextView macAddresReg;
+    TextView macAddresReg, fingerprintRegisterChecked;
     ProgressDialog dialog;
 
     @Override
@@ -32,6 +35,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        //ngecek hpnya support fingerprint atau engga
+        fingerprintCheck();
+
         toLogin = (Button) findViewById(R.id.btnToLogin);
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,8 +48,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        macAddresReg = (TextView) findViewById(R.id.macAddresReg);
-        macAddresReg.setText("Your MAC Address : " + getWlanMacAddress());
+        macAddresReg = (TextView) findViewById(R.id.macAddresReg);if(getWlanMacAddress() != null){
+            macAddresReg.setVisibility(View.VISIBLE);
+            macAddresReg.setText("Your MAC Address : " + getWlanMacAddress());
+        }
+        else{
+            macAddresReg.setVisibility(View.GONE);
+        }
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
@@ -52,6 +63,23 @@ public class RegisterActivity extends AppCompatActivity {
         phone = (EditText) findViewById(R.id.phoneNumber);
 
         registerNow = (Button) findViewById(R.id.btnRegister);
+    }
+
+    private void fingerprintCheck() {
+        fingerprintRegisterChecked = (TextView) findViewById(R.id.fingerprintRegisterCheck);
+
+        FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(mContext);
+
+
+        if (!fingerprintManagerCompat.isHardwareDetected()) {
+            fingerprintRegisterChecked.setVisibility(View.VISIBLE);
+            fingerprintRegisterChecked.setText("No Fingerprint Support For Your Device");
+        } else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {
+            FancyToast.makeText(this,"No Fingerprint Set",FancyToast.LENGTH_SHORT,FancyToast.CONFUSING,true);
+        } else {
+            fingerprintRegisterChecked.setVisibility(View.VISIBLE);
+            fingerprintRegisterChecked.setText("Your Device Support Fingerprint");
+        }
     }
 
     public static String getWlanMacAddress() {

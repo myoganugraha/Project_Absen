@@ -123,7 +123,21 @@
             android:layout_marginBottom="10dp"
             android:text="test"
             android:textAlignment="center"
+            android:visibility="invisible"
             android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/fingerprintRegisterCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"/>
+
+
 
         <Button
             android:id="@+id/btnRegister"
