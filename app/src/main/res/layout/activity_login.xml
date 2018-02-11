@@ -70,18 +70,6 @@
             android:visibility="invisible"
             android:textColor="@color/colorPrimary"/>
 
-        <TextView
-            android:id="@+id/fingerprintLoginCheck"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:text="Fingerprint Check Success"
-            android:textAlignment="center"
-            android:visibility="invisible"
-            android:textColor="@color/colorPrimary"/>
-
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"

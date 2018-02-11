@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,9 +44,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button btnLinkRegist, btnLogin;
     private EditText usernameLog, passwordLog;
-    TextView macAddres, fingerprintChecked;
-    ProgressDialog loading;
-    Context mContext;
+    private TextView macAddres, fingerprintChecked;
+    private ProgressDialog loading;
+    private Context mContext;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initComponents() {
 
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutLogin);
         //ngecek hpnya support fingerprint atau engga
         fingerprintCheck();
 
@@ -97,19 +101,29 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void fingerprintCheck() {
-        fingerprintChecked = (TextView) findViewById(R.id.fingerprintLoginCheck);
-
         FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(mContext);
 
 
         if (!fingerprintManagerCompat.isHardwareDetected()) {
-            fingerprintChecked.setVisibility(View.VISIBLE);
-            fingerprintChecked.setText("No Fingerprint Support For Your Device");
+            final Snackbar snackbar = Snackbar
+                    .make(linearLayout, "No Fingerprint Support on This Device", Snackbar.LENGTH_INDEFINITE).setAction("Okay", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        }
+                    });
+            snackbar.show();
+
         } else if (!fingerprintManagerCompat.hasEnrolledFingerprints()) {
             FancyToast.makeText(this,"No Fingerprint Set",FancyToast.LENGTH_SHORT,FancyToast.CONFUSING,true);
         } else {
-            fingerprintChecked.setVisibility(View.VISIBLE);
-            fingerprintChecked.setText("Your Device Support Fingerprint");
+            Snackbar snackbar = Snackbar
+                    .make(linearLayout, "This Device Support Fingerprint", Snackbar.LENGTH_INDEFINITE).setAction("All Is Well", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+            snackbar.show();
         }
     }
 
